@@ -1,4 +1,5 @@
 "use strict";
+const OperationManager = require('./operationManager.js')
 
 function ACSCluster(resourceGroupName, clusterName, azureAPI, repository) {
     let api = azureAPI
@@ -7,7 +8,8 @@ function ACSCluster(resourceGroupName, clusterName, azureAPI, repository) {
         status: 'uninitialized',
         message: 'Uninitialized'
     }
-    let pendingOperationUrl = null
+
+    let opmanager = new OperationManager(repository)
 
     function setStatus(newStatus, newMessage) {
         pocStatus.status = newStatus
@@ -17,8 +19,7 @@ function ACSCluster(resourceGroupName, clusterName, azureAPI, repository) {
     function _getClusterContext() {
         return {
             cluster: pocCluster,
-            status: pocStatus,
-            pendingOperationUrl: pendingOperationUrl
+            status: pocStatus
         }
     }
 
@@ -36,20 +37,42 @@ function ACSCluster(resourceGroupName, clusterName, azureAPI, repository) {
                     resolve(_getClusterContext())
                 } else {
                     /* Check status of pending operation */
-                    if(pendingOperationUrl) {
-                        api.checkOperation(pendingOperationUrl).then(result=>{
-                            if(result.status === 'Succeeded') {
+                    let pendingOperation = repository.getPendingOperation()
+
+                    if (pendingOperation) {
+                        console.log("Checking pending operation status")
+
+                        api.checkOperation(pendingOperation.pendingOperationUrl).then(result => {
+                            console.log("Received pending operation status")
+                            console.dir(result, {depth:null, color:true })
+
+                            if (result.data.status === 'Succeeded') {
                                 pendingOperationUrl = null
                                 setStatus("Ready", "Scale succeeded.")
+
+                                // Delete pending operation
+                                // Write successful operation to history
+                                opmanager.succeed(pendingOperation, JSON.stringify(result.data))
+
+                            } else if (result.data.status === 'InProgress') {
+                                // TODO: Write ping history here
+                            } else {
+                                // Assume failure
+                                setStatus("Failed", "Scale failed.")
+                                opmanager.fail(pendingOperation, JSON.stringify(result.data))
                             }
                             resolve(_getClusterContext())
-                        }).catch(reason =>{
+                        }).catch(reason => {
+                            setStatus("Failed", "Scale failed.")
+                            opmanager.fail(pendingOperation, JSON.stringify(reason))
+
                             reject(reason)
                         })
+                    } else {
+                        resolve(_getClusterContext())
                     }
-                    
                 }
-                
+
             }).catch(err => {
                 pocCluster = null
                 setStatus('Error', err.message)
@@ -60,6 +83,9 @@ function ACSCluster(resourceGroupName, clusterName, azureAPI, repository) {
 
     function _scaleCluster(agentPoolSize) {
         return new Promise(function scaleClusterPromise(resolve, reject) {
+            // Create operation
+            let operation = opmanager.create()
+
             api.getContainerService(resourceGroupName, clusterName).then(result => {
                 let payload = result.data
 
@@ -67,26 +93,42 @@ function ACSCluster(resourceGroupName, clusterName, azureAPI, repository) {
 
                 api.putContainerService(resourceGroupName, clusterName, payload).then(result => {
                     pocCluster = result.data
-                    /* Record operation number and pending status here */
-                    pendingOperationUrl = result.headers["azure-asyncoperation"]
+                    let pendingOperationUrl = result.headers["azure-asyncoperation"]
+
                     setStatus('Scaling', 'Scale operation in progress.')
+
+                    // Write pending operation
+                    operation.pendingOperationUrl = pendingOperationUrl
+                    opmanager.initiate(operation)
+
+                    
+
                     resolve(_getClusterContext())
                 }).catch(err => {
-                    reject({ stage: 'Update Cluster', message: err.data.error.message, reason: err })
+                    setStatus('Error', 'Failed to initiate cluster update')
+
+                    // Fail operation and write to history
+                    opmanager.fail(operation, JSON.stringify(err))
+
+                    reject({ stage: 'Update Cluster', message: 'Payload:' + JSON.stringify(err), reason: err })
                 })
             }).catch(err => {
                 setStatus('Error', 'Failed to get cluster data')
-                reject({stage: 'Get Cluster', message:'Failed to get cluster data', reason: err })
+
+                // Fail operation and write to history
+                opmanager.fail(operation, 'Failed to get cluster data.')
+
+                reject({ stage: 'Get Cluster', message: 'Failed to get cluster data', reason: err })
             })
         })
     }
 
     function _init() {
-        return new Promise(function ClusterInitPromis(resolve, reject){
-            api.init().then(function(){
-                _getCluster().then(cluster =>{
+        return new Promise(function ClusterInitPromis(resolve, reject) {
+            api.init().then(function () {
+                _getCluster().then(cluster => {
                     resolve(cluster)
-                }).catch(reason =>{
+                }).catch(reason => {
                     reject(reason)
                 })
             }).catch(reason => {

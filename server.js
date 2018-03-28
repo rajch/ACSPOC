@@ -3,17 +3,19 @@
 const Express = require("express")
 const AzureAPI = require("./azureAPI.js")
 const ACSCluster = require("./ACSCluster.js")
+const IMRepository = require("./IMRepository.js")
 
 const clientID = "c1f2a01d-c354-46c4-9d80-5db751f43c1b"
 const clientSecret = "YtQrAZ4DhXo6m8ijNAaN00BuNklZR9dp//UoJx9+poI="
 const tenantID = "69e52111-6b68-4e8f-b1bc-7b81d1ccbc16"
 const subscriptionID = "e35fda75-fea8-4409-a44f-c08a8e066d2b"
 
-const resourceGroupName = "POCGroup1"
-const clusterName = "POCACS1"
+const resourceGroupName = "POCGroup3"
+const clusterName = "POCACS4"
 
 const api = new AzureAPI(clientID, clientSecret, tenantID, subscriptionID)
-const cluster = new ACSCluster(resourceGroupName, clusterName, api, null)
+const repo = new IMRepository()
+const cluster = new ACSCluster(resourceGroupName, clusterName, api, repo)
 
 console.log("Starting server.")
 
@@ -59,6 +61,10 @@ cluster.init().then(clusterData => {
             res.statusMessage = err.message
             res.json(err.response.data)
         })
+    })
+
+    app.get("/dump", function(req, res, next){
+        res.json(repo.dump())
     })
 
     console.log("Server started")
