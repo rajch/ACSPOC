@@ -67,3 +67,16 @@ main label::after {
 main div.maincolumn {
     display: inline-block;
 }
+
+table.requesttable {
+    border: 1px solid gray;
+}
+
+table.requesttable th, table.requesttable td {
+    padding: 5px;
+    text-align: left;
+}
+
+table.requesttable thead {
+    background-color: #bbb;
+}
