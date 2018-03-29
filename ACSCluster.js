@@ -28,6 +28,16 @@ function ACSCluster(resourceGroupName, clusterName, azureAPI, repository) {
         return pocStatus
     }
 
+    function _debugRawOperation(rawopurl) {
+        return new Promise(function debugRawOperationPromise(resolve, reject){
+            api.checkOperation(rawopurl).then(result=>{
+                resolve(result)
+            }).catch(reason =>{
+                reject(reason)
+            })  
+        })
+    }
+
     function _checkOperationStatus() {
         return new Promise(function checkStatusPromise(resolve, reject) {
             /* Check status of pending operation */
@@ -38,7 +48,7 @@ function ACSCluster(resourceGroupName, clusterName, azureAPI, repository) {
 
                 api.checkOperation(pendingOperation.pendingOperationUrl).then(result => {
                     console.log("Received pending operation status")
-                    console.dir(result, { depth: null, color: true })
+                    // console.dir(result, { depth: null, color: true })
 
                     if (result.data.status === 'Succeeded') {
                         setStatus("Ready", "Scale succeeded.")
@@ -166,6 +176,7 @@ function ACSCluster(resourceGroupName, clusterName, azureAPI, repository) {
     this.scaleCluster = _scaleCluster
     this.checkOperationStatus = _checkOperationStatus
     this.getHistory = _getHistory
+    this.debugRawOperation = _debugRawOperation
     this.init = _init
 
 }

@@ -125,6 +125,24 @@ cluster.init().then(clusterData => {
         })        
     })
 
+    app.get("/debugop", function(req, res, next){
+        res.render("debugop", {opresult:null})
+    })
+
+    app.post("/debugop", function(req, res, next){
+        let opurl = req.body.opurl
+
+        if(opurl) {
+            cluster.debugRawOperation(opurl).then(result => {
+                res.render("debugop", {opresult: JSON.stringify(result, null, 2)})
+            }).catch(reason => {
+                res.render("debugop", {opresult: JSON.stringify(reason, null, 2)})
+            })
+        } else {
+            res.redirect("/debugop")
+        }
+    })
+
     console.log("Server started")
     app.listen(8085)
 

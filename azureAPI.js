@@ -120,7 +120,7 @@ function azureAPI(clientID, clientSecret, tenantID, subscriptionID) {
                             }
                         ).then(response => {
                             console.log("Successfully retrieved operation update status")
-                            console.dir(response, { depth: null, color: true })
+                            // console.dir(response, { depth: null, color: true })
 
                             resolve({ headers: response.headers, data: response.data })
                         }).catch(reason => {
