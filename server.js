@@ -46,6 +46,7 @@ cluster.init().then(clusterData => {
         })
     })
 
+    /*
     app.get("/upd/:count", function (req, res, next) {
         console.log("Update request received.")
 
@@ -68,6 +69,7 @@ cluster.init().then(clusterData => {
             res.json(err.response.data)
         })
     })
+    */
 
     app.get("/dump", function (req, res, next) {
         res.json(repo.dump())
@@ -112,7 +114,15 @@ cluster.init().then(clusterData => {
     })
 
     app.get("/history", function(req, res, next) {
-        res.render("history", repo.dump())
+        console.log("History request received")
+        cluster.getHistory().then(result =>{
+            res.render("history", result)
+        }).catch(err => {
+            console.error("History request failed!")
+            console.dir(err, { depth: null, color: true })
+            res.status(400)
+            res.json(err)
+        })        
     })
 
     console.log("Server started")
