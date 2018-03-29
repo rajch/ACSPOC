@@ -29,12 +29,12 @@ function ACSCluster(resourceGroupName, clusterName, azureAPI, repository) {
     }
 
     function _debugRawOperation(rawopurl) {
-        return new Promise(function debugRawOperationPromise(resolve, reject){
-            api.checkOperation(rawopurl).then(result=>{
+        return new Promise(function debugRawOperationPromise(resolve, reject) {
+            api.checkOperation(rawopurl).then(result => {
                 resolve(result)
-            }).catch(reason =>{
+            }).catch(reason => {
                 reject(reason)
-            })  
+            })
         })
     }
 
@@ -81,7 +81,7 @@ function ACSCluster(resourceGroupName, clusterName, azureAPI, repository) {
         return new Promise(function getClusterPromise(resolve, reject) {
             api.getContainerService(resourceGroupName, clusterName).then(result => {
                 pocCluster = result.data
-                
+
                 if (pocStatus.status !== 'Scaling') {
                     setStatus('Ready', 'Cluster data received.')
                     resolve(_getClusterContext())
@@ -148,10 +148,10 @@ function ACSCluster(resourceGroupName, clusterName, azureAPI, repository) {
     }
 
     function _getHistory() {
-        return new Promise(function getHistoryPromise(resolve, reject){
-            _checkOperationStatus().then(result =>{
+        return new Promise(function getHistoryPromise(resolve, reject) {
+            _checkOperationStatus().then(result => {
                 resolve(repository.dump())
-            }).catch(reason =>{
+            }).catch(reason => {
                 reject(reason)
             })
         })
@@ -159,13 +159,28 @@ function ACSCluster(resourceGroupName, clusterName, azureAPI, repository) {
 
     function _init() {
         return new Promise(function ClusterInitPromis(resolve, reject) {
+            console.log("Initializing API")
             api.init().then(function () {
-                _getCluster().then(cluster => {
-                    resolve(cluster)
-                }).catch(reason => {
+                console.log("API Initialized.")
+
+                console.log("Initializing repository")
+
+                repository.init().then(result => {
+
+                    _getCluster().then(cluster => {
+                        resolve(cluster)
+                    }).catch(reason => {
+                        reject(reason)
+                    })
+                    
+                }).catch(reason =>{
+                    console.error("Could not initialize repository.")
+
                     reject(reason)
                 })
             }).catch(reason => {
+                console.error("Could not initialize repository.")
+
                 reject(reason)
             })
         })

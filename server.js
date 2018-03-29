@@ -15,7 +15,10 @@ const resourceGroupName = "POCGroup5"
 const clusterName = "POCACS5"
 
 const api = new AzureAPI(clientID, clientSecret, tenantID, subscriptionID)
-const repo = new IMRepository()
+const repo = new IMRepository(__dirname + "/db/operations.json")
+
+//repo.load()
+
 const cluster = new ACSCluster(resourceGroupName, clusterName, api, repo)
 
 console.log("Starting server.")

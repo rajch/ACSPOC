@@ -44,6 +44,9 @@
     <%} else {%>
     <h2>Pending Operation</h2>
     <%- include('requestTable', { requests: [ pendingOperation ] }) %>
+    <div>
+        <a href="/history">View History</a>
+    </div>
     <%} %>
 </body>
 </html>

@@ -17,7 +17,9 @@ function operationManager(repository) {
     function _initiate(operation) {
         operation.status = 'Initiated'
         operation.initiated = Date.now()
+
         repository.setPendingOperation(operation)
+        repository.save()
     }
 
     function _succeed(operation, payload) {
@@ -27,6 +29,7 @@ function operationManager(repository) {
 
         repository.deletePendingOperation()
         repository.addOperationToHistory(operation)
+        repository.save()
     }
 
     function _fail(operation, payload) {
@@ -36,7 +39,9 @@ function operationManager(repository) {
 
         repository.deletePendingOperation()
         repository.addOperationToHistory(operation)
-        
+        repository.save()
+
+        // TODO: Trigger email here
     }
 
     this.create = _create
