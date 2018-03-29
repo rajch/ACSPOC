@@ -17,9 +17,6 @@ const clusterName = 'POCACS5'
 
 const api = new AzureAPI(clientID, clientSecret, tenantID, subscriptionID)
 const repo = new IMRepository(path.join(__dirname, 'db', 'operations.json'))
-
-// repo.load()
-
 const cluster = new ACSCluster(resourceGroupName, clusterName, api, repo)
 
 console.log('Starting server.')
@@ -31,6 +28,9 @@ cluster.init().then(clusterData => {
 
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded({ extended: true }))
+
+  app.use("/css", Express.static('css'))
+  app.use("/images", Express.static('images'))
 
   app.set('view engine', 'ejs')
 
@@ -48,31 +48,6 @@ cluster.init().then(clusterData => {
       res.json(err)
     })
   })
-
-  /*
-    app.get("/upd/:count", function (req, res, next) {
-        console.log("Update request received.")
-
-        let newCount = req.params.count ? parseInt(req.params.count) : 2
-        newCount = newCount ? newCount : 2
-
-        cluster.scaleCluster(newCount).then(result => {
-
-            console.info("/upd put succeeded!")
-            //console.dir(result, { depth: null, color: true })
-
-            res.json(result)
-            res.end()
-
-        }).catch(err => {
-            console.error("/upd update failed!")
-            console.dir(err.response.data, { depth: null, color: true })
-            res.status(400)
-            res.statusMessage = err.message
-            res.json(err.response.data)
-        })
-    })
-    */
 
   app.get('/dump', function (req, res, next) {
     res.json(repo.dump())

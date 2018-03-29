@@ -1,17 +1,41 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Azure ACS POC</title>
+    <title>History - Azure ACS POC</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
+
 <body>
-    <h2>Request History</h2>
-    <%- include('requestTable', { requests: history }) %>
-    <% if(pendingOperation) {%>
-        <h2>Pending Operation</h2>
-        <%- include('requestTable', { requests: [ pendingOperation ] }) %>
-    <%} %>
+    <header>
+        <div class="headercontent">
+            <h1>History - Azure ACS POC</h1>
+            <div class="caption">Scale ACS Clusters</div>
+            <nav>
+                <a href="/">Scale</a>
+                <a href="/history" class="current">History</a>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <h2>Request History</h2>
+        <%
+            var sortedhistory = history.sort(function(a,b) {
+                return b.created - a.created
+            })
+        %>
+        <%- include('requestTable', { requests: sortedhistory }) %>
+        <div>
+            <a href="/dump" target="_blank">Export to JSON</a>
+        </div>
+        <% if(pendingOperation) { %>
+            <h2>Pending Operation</h2>
+            <%- include('requestTable', { requests: [ pendingOperation ] }) %>
+        <% } %>
+    </main>
 </body>
+
 </html>

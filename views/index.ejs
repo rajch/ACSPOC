@@ -1,52 +1,83 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Azure ACS POC</title>
+    <title>Home - Azure ACS POC</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
+
 <body>
-    <h1>CRG7 POC</h1>
-    <h2>Cluster Details</h2>
-    <div class="clusterdetails">
-        <div>
-            <label>Name</label>
-            <span><%= cluster.name %></span>
+    <header>
+        <div class="headercontent">
+            <h1>Home - Azure ACS POC</h1>
+            <div class="caption">Scale ACS Clusters</div>
+            <nav>
+                <a href="/" class="current">Scale</a>
+                <a href="/history">History</a>
+            </nav>
         </div>
-        <div>
-            <label>Location</label>
-            <span><%= cluster.location %></span></span>
+    </header>
+    <main>
+        <div class="maincolumn">
+            <img src="images/deco.png" alt="Decorative picture" />
         </div>
-        <div>
-        <label>Orchestrator</label>
-            <span><%= cluster.properties.orchestratorProfile.orchestratorType %></span></span>
+        <div class="maincolumn">
+            <h2>Cluster Details</h2>
+            <div class="clusterdetails">
+                <div>
+                    <label>Name</label>
+                    <span>
+                        <%= cluster.name %>
+                    </span>
+                </div>
+                <div>
+                    <label>Location</label>
+                    <span>
+                        <%= cluster.location %>
+                    </span>
+                    </span>
+                </div>
+                <div>
+                    <label>Orchestrator</label>
+                    <span>
+                        <%= cluster.properties.orchestratorProfile.orchestratorType %>
+                    </span>
+                    </span>
+                </div>
+                <div>
+                    <label>Agents</label>
+                    <span>
+                        <%= cluster.properties.agentPoolProfiles[0].count %>
+                    </span>
+                    </span>
+                </div>
+                <div>
+                    <label>Last provisioning operation</label>
+                    <span>
+                        <%= cluster.properties.provisioningState %>
+                    </span>
+                    </span>
+                </div>
+            </div>
+            <% if(status.status !== 'Scaling') {%>
+                <h2>New Request</h2>
+                <div class="newrequest">
+                    <form action="" method="POST">
+                        <label for="newagentcount">New Agent Count</label>
+                        <input type="number" min="1" max="100" id="newagentcount" name="newagentcount" value="<%= cluster.properties.agentPoolProfiles[0].count %>"
+                        />
+                        <input type="submit" value="Submit" />
+                    </form>
+                </div>
+            <% } else {%>
+                <h2>Pending Operation</h2>
+                <%- include('requestTable', { requests: [ pendingOperation ] }) %>
+            <% } %>
         </div>
-        <div>
-            <label>Agents</label>
-            <span><%= cluster.properties.agentPoolProfiles[0].count %></span></span>
-        </div>
-        <div>
-        <label>Last provisioning operation</label>
-            <span><%= cluster.properties.provisioningState %></span></span>
-        </div>
-    </div>
-    <% if(status.status !== 'Scaling') {%>
-    <h2>New Request</h2>
-    <div class="newrequest">
-        
-        <form action="" method="POST">
-            <label for="newagentcount">New Agent Count</label>
-            <input type="number" min="1" max="100" id="newagentcount" name="newagentcount" value="<%= cluster.properties.agentPoolProfiles[0].count %>" />
-            <input type="submit" value="Submit" />
-        </form>
-    </div>
-    <%} else {%>
-    <h2>Pending Operation</h2>
-    <%- include('requestTable', { requests: [ pendingOperation ] }) %>
-    <div>
-        <a href="/history">View History</a>
-    </div>
-    <%} %>
+    </main>
 </body>
+
 </html>
