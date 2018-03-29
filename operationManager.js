@@ -9,6 +9,7 @@ function operationManager(repository) {
             finished: null,
             pendingOperationUrl: null,
             status: 'Created',
+            description: '',
             lastmessage: ''
         }
     }

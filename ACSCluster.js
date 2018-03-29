@@ -85,9 +85,12 @@ function ACSCluster(resourceGroupName, clusterName, azureAPI, repository) {
         return new Promise(function scaleClusterPromise(resolve, reject) {
             // Create operation
             let operation = opmanager.create()
+            operation.description = 'Scale agents to ' + agentPoolSize
 
             api.getContainerService(resourceGroupName, clusterName).then(result => {
                 let payload = result.data
+                
+                operation.description += ' from ' + payload.properties.agentPoolProfiles[0].count
 
                 payload.properties.agentPoolProfiles[0].count = agentPoolSize
 
