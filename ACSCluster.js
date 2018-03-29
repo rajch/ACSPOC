@@ -19,7 +19,8 @@ function ACSCluster(resourceGroupName, clusterName, azureAPI, repository) {
     function _getClusterContext() {
         return {
             cluster: pocCluster,
-            status: pocStatus
+            status: pocStatus,
+            pendingOperation: pocStatus.status === 'Scaling' ? repository.getPendingOperation() : null
         }
     }
 
@@ -47,7 +48,6 @@ function ACSCluster(resourceGroupName, clusterName, azureAPI, repository) {
                             console.dir(result, {depth:null, color:true })
 
                             if (result.data.status === 'Succeeded') {
-                                pendingOperationUrl = null
                                 setStatus("Ready", "Scale succeeded.")
 
                                 // Delete pending operation

@@ -1,6 +1,7 @@
 "use strict";
 
 const Express = require("express")
+const bodyParser = require('body-parser')
 const AzureAPI = require("./azureAPI.js")
 const ACSCluster = require("./ACSCluster.js")
 const IMRepository = require("./IMRepository.js")
@@ -10,8 +11,8 @@ const clientSecret = "YtQrAZ4DhXo6m8ijNAaN00BuNklZR9dp//UoJx9+poI="
 const tenantID = "69e52111-6b68-4e8f-b1bc-7b81d1ccbc16"
 const subscriptionID = "e35fda75-fea8-4409-a44f-c08a8e066d2b"
 
-const resourceGroupName = "POCGroup3"
-const clusterName = "POCACS4"
+const resourceGroupName = "POCGroup5"
+const clusterName = "POCACS5"
 
 const api = new AzureAPI(clientID, clientSecret, tenantID, subscriptionID)
 const repo = new IMRepository()
@@ -24,6 +25,11 @@ console.log("Starting server.")
 cluster.init().then(clusterData => {
 
     const app = Express()
+
+    app.use(bodyParser.json())
+    app.use(bodyParser.urlencoded({ extended: true }))
+
+    app.set('view engine', 'ejs')
 
     app.get("/cs", function (req, res, next) {
         cluster.getCluster().then(result => {
@@ -42,7 +48,7 @@ cluster.init().then(clusterData => {
 
     app.get("/upd/:count", function (req, res, next) {
         console.log("Update request received.")
-        
+
         let newCount = req.params.count ? parseInt(req.params.count) : 2
         newCount = newCount ? newCount : 2
 
@@ -63,8 +69,50 @@ cluster.init().then(clusterData => {
         })
     })
 
-    app.get("/dump", function(req, res, next){
+    app.get("/dump", function (req, res, next) {
         res.json(repo.dump())
+    })
+
+    app.get("/", function (req, res, next) {
+        cluster.getCluster().then(result => {
+            console.info("get succeeded!")
+            res.render("index", result)
+            res.end()
+        }).catch(err => {
+            console.error("get failed")
+            console.dir(err, { depth: null, color: true })
+            res.status(400)
+            res.statusMessage = err.message
+            res.json(err)
+        })
+    })
+
+    app.post("/", function (req, res, next) {
+        let newCount = req.body.newagentcount ? parseInt(req.body.newagentcount) : 0
+
+        if (newCount) {
+
+            cluster.scaleCluster(newCount).then(result => {
+                console.info("/upd put succeeded!")
+                //console.dir(result, { depth: null, color: true })
+
+                res.redirect("/")
+                res.end()
+
+            }).catch(err => {
+                console.error("/upd update failed!")
+                console.dir(err.response.data, { depth: null, color: true })
+                res.status(400)
+                res.statusMessage = err.message
+                res.json(err.response.data)
+            })
+        } else {
+            res.redirect("/")
+        }
+    })
+
+    app.get("/history", function(req, res, next) {
+        res.render("history", repo.dump())
     })
 
     console.log("Server started")

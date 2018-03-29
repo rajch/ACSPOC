@@ -18,6 +18,8 @@
   "homepage": "https://github.com/rajch/CRG7POC#readme",
   "dependencies": {
     "axios": "^0.18.0",
+    "body-parser": "^1.18.2",
+    "ejs": "^2.5.8",
     "express": "^4.16.3",
     "ms-rest-azure": "^2.5.5"
   },

@@ -1,0 +1,37 @@
+<table>
+    <thead>
+        <tr>
+            <th>Description</th>
+            <th>Created</th>
+            <th>Initiated</th>
+            <th>Completed</th>
+            <th>Status</th>
+            <th>Last Message</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% requests.forEach((request, index) => { %>
+            <tr>
+                <td>
+                    <%= request.description %>
+                </td>
+                <td>
+                    <%= new Date(request.created) %>
+                </td>
+                <td>
+                    <%= new Date(request.initiated) %>
+                </td>
+                <td>
+                    <%= request.finished ? new Date(request.finished) : '' %>
+                </td>
+                <td>
+                    <%= request.status %>
+                </td>
+                <td>
+                    <%= request.lastmessage %>
+                </td>
+
+            </tr>
+        <% }) %>
+    </tbody>
+</table>
