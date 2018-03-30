@@ -141,6 +141,62 @@ function POCApp () {
     }
   }
 
+  function _apiClusterInfoHandler (req, res, next) {
+    if (_clusterNotReady()) {
+      next(new Error('Cluster not configured.'))
+      return
+    }
+    console.log('Cluster info get initiated.')
+    cluster.getCluster().then(result => {
+      console.info('Cluster info get succeeded!')
+      // console.dir(result, { depth: null, color: true })
+      res.json(result)
+      res.end()
+    }).catch(err => {
+      console.error('Cluster info get failed')
+      // console.dir(err, { depth: null, color: true })
+      next(err)
+    })
+  }
+
+  function _apiDumpRepohandler (req, res, next) {
+    if (_clusterNotReady()) {
+      next(new Error('Cluster not configured.'))
+      return
+    }
+    res.json(repo.dump())
+  }
+
+  function _debugopGetHandler (req, res, next) {
+    if (_clusterNotReady()) {
+      res.redirect('/configure')
+      return
+    }
+    res.render('debugop', { opresult: null })
+  }
+
+  function _debugopPostHandler (req, res, next) {
+    let opurl = req.body.opurl
+
+    if (opurl) {
+      cluster.debugRawOperation(opurl).then(result => {
+        res.render('debugop', { opresult: JSON.stringify(result, null, 2) })
+      }).catch(reason => {
+        res.render('debugop', { opresult: JSON.stringify(reason, null, 2) })
+      })
+    } else {
+      res.redirect('/debugop')
+    }
+  }
+
+  function _errorHandler (err, req, res, next) {
+    if (res.headersSent) {
+      return next(err)
+    }
+    res.status(500)
+    res.render('error', { error: err })
+  }
+
   function _init () {
     return new Promise(function POCAppInitPromise (resolve, reject) {
       config = new POCConfig(_getFilePath(CONFFILENAME))
@@ -169,6 +225,11 @@ function POCApp () {
   this.historyPageGetHandler = _historyPageGetHandler
   this.configurePageGetHandler = _configurePageGetHandler
   this.configurePagePostHandler = _configurePagePostHandler
+  this.apiClusterInfoHandler = _apiClusterInfoHandler
+  this.apiDumpRepohandler = _apiDumpRepohandler
+  this.debugopGetHandler = _debugopGetHandler
+  this.debugopPostHandler = _debugopPostHandler
+  this.errorHandler = _errorHandler
   this.init = _init
 
   return this
