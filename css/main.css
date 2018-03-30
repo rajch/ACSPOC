@@ -1,12 +1,13 @@
 header {
-    background-color: grey;
+    background-color: rgb(64,64,64);
     height: 15em;
     vertical-align: bottom;
     color: white;
 }
 
 h1 {
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    letter-spacing: -3px;
     margin: 5px;
 }
 
@@ -31,7 +32,7 @@ header nav a {
     margin: 10px;
     border: 2px solid white;
     border-radius: 5px;
-    background-color: orange;
+    background-color: #ed7d31;
     color: white;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     text-decoration: none;
@@ -47,6 +48,7 @@ main {
     padding: 20px;
     margin-top: 5px;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    background-color: rgb(242,242,242)
 }
 
 main input {
@@ -54,7 +56,7 @@ main input {
 }
 
 main input[type='submit'] {
-    background-color: orange;
+    background-color: #ed7d31 ;
     color: white;
     border: 2px solid gray;
     border-radius: 5px;

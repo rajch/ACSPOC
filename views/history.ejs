@@ -29,13 +29,16 @@
             })
         %>
         <%- include('requestTable', { requests: sortedhistory }) %>
-        <div>
-            <a href="/dump" target="_blank">Export to JSON</a>
-        </div>
+
         <% if(pendingOperation) { %>
             <h2>Pending Operation</h2>
             <%- include('requestTable', { requests: [ pendingOperation ] }) %>
         <% } %>
+
+        <div>
+            <a href="/history">Refresh</a>
+            <a href="/dump" target="_blank">Export to JSON</a>
+        </div>
     </main>
 </body>
 
