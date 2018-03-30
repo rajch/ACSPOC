@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Error - Azure ACS POC</title>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+
+<body>
+    <header>
+        <div class="headercontent">
+            <h1>Home - Azure ACS POC</h1>
+            <div class="caption">Scale ACS Clusters</div>
+            <nav>
+                <a href="/" class="current">Scale</a>
+                <a href="/history">History</a>
+                <a href="/configure">Configure</a>
+            </nav>
+        </div>
+    </header>
+    <main>
+    <h2>Error.</h2>
+    <% 
+    let errmessage = error.response && error.response.data && error.response.data.error ?
+        error.response.data.error.message :
+        error.message;
+    %>
+    <p><%- errmessage %></p>
+    </main>
+</body>
+
+</html>

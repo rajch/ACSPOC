@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Configure - Azure ACS POC</title>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+
+<body>
+    <header>
+        <div class="headercontent">
+            <h1>Home - Azure ACS POC</h1>
+            <div class="caption">Scale ACS Clusters</div>
+            <nav>
+                <a href="/">Scale</a>
+                <a href="/history">History</a>
+                <a href="/configure" class="current">Configure</a>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <h2>Configure</h2>
+        <% if(errormessage) { %>
+            <div class="error">
+                <p><%= errormessage %></p>
+            </div>    
+        <% } %>
+        <div class="clusterdetails">
+            <form method="POST">
+                <div>
+                    <label for="clientID">Client ID</label>
+                    <input type="text" id="clientID" name="clientID" value="<%= clientID %>" />
+                </div>
+                <div>
+                    <label for="clientSecret">Client Secret</label>
+                    <input type="text" id="clientSecret" name="clientSecret" value="<%= clientSecret %>" />
+                </div>
+                <div>
+                    <label for="tenantID">Tenant ID</label>
+                    <input type="text" id="tenantID" name="tenantID" value="<%= tenantID %>" />
+                </div>
+                <div>
+                    <label for="subscriptionID">Subscription ID</label>
+                    <input type="text" id="subscriptionID" name="subscriptionID" value="<%= subscriptionID %>" />
+                </div>
+                <div>
+                    <label for="resourceGroupName">Resource Group</label>
+                    <input type="text" id="resourceGroupName" name="resourceGroupName" value="<%= resourceGroupName %>" />
+                </div>
+                <div>
+                    <label for="clusterName">Cluster Name</label>
+                    <input type="text" id="clusterName" name="clusterName" value="<%= clusterName %>" />
+                </div>
+                <div>
+                    <input type="submit" />
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+
+</html>

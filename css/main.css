@@ -82,3 +82,14 @@ table.requesttable th, table.requesttable td {
 table.requesttable thead {
     background-color: #bbb;
 }
+
+div.clusterdetails form label {
+    width: 10em;
+    height: 2.5em;
+    display: inline-block;
+}
+
+div.clusterdetails form input[type='text'] {
+    width: 20em;
+    display: inline-block;
+}
