@@ -1,5 +1,5 @@
 {
-  "name": "crg7poc",
+  "name": "acspoc",
   "version": "1.0.0",
   "description": "Azure Container Service API POC",
   "main": "server.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rajch/CRG7POC.git"
+    "url": "git+https://github.com/rajch/ACSPOC.git"
   },
   "author": "Raj Chaudhuri",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/rajch/CRG7POC/issues"
+    "url": "https://github.com/rajch/ACSPOC/issues"
   },
-  "homepage": "https://github.com/rajch/CRG7POC#readme",
+  "homepage": "https://github.com/rajch/ACSPOC#readme",
   "dependencies": {
     "axios": "^0.18.0",
     "body-parser": "^1.18.2",
