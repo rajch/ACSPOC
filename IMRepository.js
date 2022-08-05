@@ -29,7 +29,7 @@ function IMRepository (filepath) {
 
   function _dump () {
     return {
-      pendingOperation: pendingOperation,
+      pendingOperation,
       history: operationHistory
     }
   }

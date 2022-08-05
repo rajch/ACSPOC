@@ -7,12 +7,12 @@ function POCConfig (filepath) {
 
   function _getEmptyConfig () {
     return {
-      'clientID': '',
-      'clientSecret': '',
-      'tenantID': '',
-      'subscriptionID': '',
-      'resourceGroupName': '',
-      'clusterName': ''
+      clientID: '',
+      clientSecret: '',
+      tenantID: '',
+      subscriptionID: '',
+      resourceGroupName: '',
+      clusterName: ''
     }
   }
   function _isready () {
@@ -42,7 +42,7 @@ function POCConfig (filepath) {
   function _set (newConfig) {
     config = _getEmptyConfig()
 
-    for (var key in newConfig) {
+    for (const key in newConfig) {
       config[key] = newConfig[key]
     }
 

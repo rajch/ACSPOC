@@ -25,8 +25,8 @@ function azureAPI (clientID, clientSecret, tenantID, subscriptionID) {
 
   function _getStatus () {
     return {
-      status: status,
-      message: message
+      status,
+      message
     }
   }
 
@@ -40,7 +40,7 @@ function azureAPI (clientID, clientSecret, tenantID, subscriptionID) {
             console.error('Could not retrieve access token.')
             reject(err)
           } else {
-            let url = getContainerServiceBaseURI(resourceGroup, containerServiceName)
+            const url = getContainerServiceBaseURI(resourceGroup, containerServiceName)
 
             console.log('Asking for containerservice')
 
@@ -74,7 +74,7 @@ function azureAPI (clientID, clientSecret, tenantID, subscriptionID) {
             console.error('Could not retrieve access token.')
             reject(err)
           } else {
-            let url = getContainerServiceBaseURI(resourceGroup, containerServiceName)
+            const url = getContainerServiceBaseURI(resourceGroup, containerServiceName)
 
             console.log('Asking for containerservice update')
 

@@ -2,14 +2,14 @@
 const OperationManager = require('./operationManager.js')
 
 function ACSCluster (resourceGroupName, clusterName, azureAPI, repository) {
-  let api = azureAPI
+  const api = azureAPI
   let pocCluster = null
-  let pocStatus = {
+  const pocStatus = {
     status: 'uninitialized',
     message: 'Uninitialized'
   }
 
-  let opmanager = new OperationManager(repository)
+  const opmanager = new OperationManager(repository)
 
   function setStatus (newStatus, newMessage) {
     pocStatus.status = newStatus
@@ -41,7 +41,7 @@ function ACSCluster (resourceGroupName, clusterName, azureAPI, repository) {
   function _checkOperationStatus () {
     return new Promise(function checkStatusPromise (resolve, reject) {
       /* Check status of pending operation */
-      let pendingOperation = repository.getPendingOperation()
+      const pendingOperation = repository.getPendingOperation()
 
       if (pendingOperation) {
         console.log('Checking pending operation status')
@@ -104,11 +104,11 @@ function ACSCluster (resourceGroupName, clusterName, azureAPI, repository) {
   function _scaleCluster (agentPoolSize) {
     return new Promise(function scaleClusterPromise (resolve, reject) {
       // Create operation
-      let operation = opmanager.create()
+      const operation = opmanager.create()
       operation.description = 'Scale agents to ' + agentPoolSize
 
       api.getContainerService(resourceGroupName, clusterName).then(result => {
-        let payload = result.data
+        const payload = result.data
 
         operation.description += ' from ' + payload.properties.agentPoolProfiles[0].count
 
@@ -116,7 +116,7 @@ function ACSCluster (resourceGroupName, clusterName, azureAPI, repository) {
 
         api.putContainerService(resourceGroupName, clusterName, payload).then(result => {
           pocCluster = result.data
-          let pendingOperationUrl = result.headers['azure-asyncoperation']
+          const pendingOperationUrl = result.headers['azure-asyncoperation']
 
           setStatus('Scaling', 'Scale operation in progress.')
 

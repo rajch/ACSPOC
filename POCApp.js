@@ -54,7 +54,7 @@ function POCApp () {
       return
     }
 
-    let newCount = req.body.newagentcount ? parseInt(req.body.newagentcount) : 0
+    const newCount = req.body.newagentcount ? parseInt(req.body.newagentcount) : 0
 
     if (newCount) {
       console.log('Scale API request received')
@@ -116,7 +116,7 @@ function POCApp () {
   }
 
   function _configurePagePostHandler (req, res, next) {
-    let newConfig = config.getEmptyConfig()
+    const newConfig = config.getEmptyConfig()
 
     newConfig.clientID = req.body.clientID
     newConfig.clientSecret = req.body.clientSecret
@@ -132,7 +132,7 @@ function POCApp () {
       _init().then(function () {
         res.redirect('/')
       }).catch(err => {
-        let errmessage = err.response && err.response.data && err.response.data.error
+        const errmessage = err.response && err.response.data && err.response.data.error
           ? err.response.data.error.message
           : err.message
 
@@ -176,7 +176,7 @@ function POCApp () {
   }
 
   function _debugopPostHandler (req, res, next) {
-    let opurl = req.body.opurl
+    const opurl = req.body.opurl
 
     if (opurl) {
       cluster.debugRawOperation(opurl).then(result => {
@@ -202,7 +202,7 @@ function POCApp () {
       config = new POCConfig(_getFilePath(CONFFILENAME))
       config.init().then(result => {
         if (config.isready()) {
-          let conf = config.getConfig()
+          const conf = config.getConfig()
 
           api = new AzureAPI(conf.clientID, conf.clientSecret, conf.tenantID, conf.subscriptionID)
           repo = new IMRepository(_getFilePath(REPOFILENAME))
